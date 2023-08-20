@@ -5,6 +5,7 @@ import {
   Tooltip,
   useMantineColorScheme,
   useComputedColorScheme,
+  type ActionIconProps,
 } from "@mantine/core";
 import {
   IconLogin,
@@ -13,7 +14,6 @@ import {
   IconMoon,
   IconSettings,
 } from "@tabler/icons-react";
-import type { ActionIconProps } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import useEvent from "react-use-event-hook";

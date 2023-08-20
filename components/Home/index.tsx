@@ -27,7 +27,6 @@ function NavbarSection() {
     <AppShell
       header={{ height: 60 }}
       navbar={{ width: 280, breakpoint: "sm", collapsed: { mobile: !opened } }}
-      padding="md"
     >
       <AppShell.Header>
         <Group h="100%" px="md">
