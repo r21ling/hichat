@@ -4,7 +4,7 @@ import {
   Text,
   Stack,
   Flex,
-  useMantineColorScheme,
+  useComputedColorScheme,
 } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
@@ -15,7 +15,9 @@ const KeyboardInput = dynamic(() => import("./KeyboardInput"));
 export default function Main() {
   const { status } = useSession();
 
-  const { colorScheme } = useMantineColorScheme();
+  const computedColorScheme = useComputedColorScheme("light", {
+    getInitialValueInEffect: true,
+  });
 
   return (
     <Flex gap="md" direction="column" wrap="nowrap" className="h-full">
@@ -23,7 +25,7 @@ export default function Main() {
         className="h-full relative"
         style={{
           backgroundColor:
-            colorScheme === "light"
+            computedColorScheme === "light"
               ? "var(--mantine-color-gray-1)"
               : "var(--mantine-color-black)",
         }}

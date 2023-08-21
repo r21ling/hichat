@@ -4,7 +4,7 @@ import { IconSend } from "@tabler/icons-react";
 export default function KeyboardInput() {
   return (
     <Box>
-      <Container fluid pt={0} pb="md" py="md">
+      <Container pt={0} pb="md" py="md">
         <Grid>
           <Grid.Col span="auto">
             <Textarea
