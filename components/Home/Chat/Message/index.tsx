@@ -1,11 +1,9 @@
 import { useMemo, memo } from "react";
 import { Paper, Grid, Text, Avatar } from "@mantine/core";
 
-import type { Message as MessageDef } from "@/libs/stores/chat";
+import type { IMessageText } from "@/libs/stores/message";
 
-type MessageProps = MessageDef & {
-  role?: "sender" | "receiver";
-};
+type MessageProps = IMessageText;
 
 const Message = ({ text, role }: MessageProps) => {
   const isSender = useMemo(() => role === "sender", [role]);

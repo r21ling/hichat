@@ -1,11 +1,11 @@
 import { shallow } from "zustand/shallow";
 
-import { useChatStore } from "@/libs/stores/chat";
+import { useMessageStore } from "@/libs/stores/message";
 
 import Message from "./Message";
 
 const Chat = () => {
-  const { messages } = useChatStore((state) => state, shallow);
+  const { messages } = useMessageStore((state) => state, shallow);
 
   return (
     <>

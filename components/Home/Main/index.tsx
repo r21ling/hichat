@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import {
   ScrollArea,
   Group,
@@ -5,18 +6,25 @@ import {
   Stack,
   Flex,
   useComputedColorScheme,
+  Box,
 } from "@mantine/core";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
+import { useEvent } from "react-use-event-hook";
 
 const Chat = dynamic(() => import("../Chat"));
 const KeyboardInput = dynamic(() => import("./KeyboardInput"));
 
 export default function Main() {
   const { status } = useSession();
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   const computedColorScheme = useComputedColorScheme("light", {
     getInitialValueInEffect: true,
+  });
+
+  const scrollToBottom = useEvent(() => {
+    bottomRef.current?.scrollIntoView({ block: "end" });
   });
 
   return (
@@ -31,17 +39,19 @@ export default function Main() {
         }}
         px="md"
       >
-        <Stack my="md">
+        <Stack mt="md">
           <Group>
             <Text>Login Status:</Text>
             <Text>{status}</Text>
           </Group>
 
           <Chat />
+
+          <Box ref={bottomRef} mb="md" />
         </Stack>
       </ScrollArea>
 
-      <KeyboardInput />
+      <KeyboardInput onSend={() => scrollToBottom()} />
     </Flex>
   );
 }
