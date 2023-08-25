@@ -1,12 +1,24 @@
 import { useMemo, memo } from "react";
-import { Paper, Grid, Text, Avatar } from "@mantine/core";
+import dynamic from "next/dynamic";
+import { Paper, Grid, Avatar } from "@mantine/core";
 
-import type { IMessageText } from "@/libs/stores/message";
+import type { IMessage } from "@/libs/stores/message";
 
-type MessageProps = IMessageText;
+const MessageText = dynamic(() => import("../MessageText"));
 
-const Message = ({ text, role }: MessageProps) => {
+type MessageProps = IMessage;
+
+const MessageContainer = ({ role, type, ...rest }: MessageProps) => {
   const isSender = useMemo(() => role === "sender", [role]);
+
+  const MessageComponent = useMemo(() => {
+    switch (type) {
+      case "text":
+        return MessageText;
+      default:
+        return null;
+    }
+  }, [type]);
 
   return (
     <Paper p="md" radius="md">
@@ -15,11 +27,11 @@ const Message = ({ text, role }: MessageProps) => {
           <Avatar radius="sm" />
         </Grid.Col>
         <Grid.Col span="auto" order={isSender ? 1 : 2}>
-          <Text size="sm">{text}</Text>
+          {MessageComponent && <MessageComponent role={role} {...rest} />}
         </Grid.Col>
       </Grid>
     </Paper>
   );
 };
 
-export default memo(Message);
+export default memo(MessageContainer);

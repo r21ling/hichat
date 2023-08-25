@@ -15,6 +15,7 @@ export default function KeyboardInput({ onSend }: { onSend?: () => void }) {
 
     await createMessage({
       text,
+      type: "text",
     });
     setText("");
     onSend?.();
