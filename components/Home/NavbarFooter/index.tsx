@@ -41,7 +41,7 @@ const ButtonWithIcon = forwardRef<
 });
 
 export default function Footer() {
-  const { setColorScheme } = useMantineColorScheme();
+  const { toggleColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme("light", {
     getInitialValueInEffect: true,
   });
@@ -76,11 +76,7 @@ export default function Footer() {
         <Tooltip
           label={computedColorScheme === "light" ? "Dark Mode" : "Light Mode"}
         >
-          <ButtonWithIcon
-            onClick={() =>
-              setColorScheme(computedColorScheme === "light" ? "dark" : "light")
-            }
-          >
+          <ButtonWithIcon onClick={() => toggleColorScheme()}>
             {computedColorScheme === "light" ? (
               <IconSun size={24} />
             ) : (
