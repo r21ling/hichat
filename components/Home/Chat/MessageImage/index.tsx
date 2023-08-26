@@ -1,6 +1,7 @@
 import { Box, Image, LoadingOverlay, rem } from "@mantine/core";
 import { useFullscreen } from "@mantine/hooks";
 import { shallow } from "zustand/shallow";
+import { useEvent } from "react-use-event-hook";
 
 import { useMessageStore, type IMessageImage } from "@/libs/stores/message";
 
@@ -10,6 +11,15 @@ const MessageImage = ({ image, state, ...rest }: MessageImageProps) => {
   const { updateMessage } = useMessageStore((state) => state, shallow);
 
   const { ref, toggle } = useFullscreen();
+  const handleUpdateMessageState = useEvent(
+    (newState: IMessageImage["state"]) => {
+      updateMessage<IMessageImage>({
+        ...rest,
+        image,
+        state: newState,
+      });
+    }
+  );
 
   return (
     <Box pos="relative" w={rem(200)} h={rem(200)}>
@@ -27,16 +37,8 @@ const MessageImage = ({ image, state, ...rest }: MessageImageProps) => {
         radius="md"
         alt="message-image"
         onClick={() => toggle()}
-        onLoad={() =>
-          updateMessage<IMessageImage>({
-            ...rest,
-            image,
-            state: "loaded",
-          })
-        }
-        onError={() =>
-          updateMessage<IMessageImage>({ ...rest, state: "error" })
-        }
+        onLoad={() => handleUpdateMessageState("loaded")}
+        onError={() => handleUpdateMessageState("error")}
       />
     </Box>
   );
