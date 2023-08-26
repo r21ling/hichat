@@ -27,6 +27,9 @@ type MessageStore = {
   >(
     message: T
   ) => void;
+  updateMessage: <T extends IMessage>(
+    message: Partial<T> & { id: IMessage["id"] }
+  ) => void;
   clearMessages: () => void;
 };
 
@@ -51,8 +54,8 @@ export const useMessageStore = createWithEqualityFn<MessageStore>(
       },
       {
         id: "4",
-        text: "!",
-        type: "text",
+        type: "image",
+        image: "https://picsum.photos/200/300",
       },
       {
         id: "5",
@@ -76,6 +79,13 @@ export const useMessageStore = createWithEqualityFn<MessageStore>(
       const role = "sender";
       set((state) => ({
         messages: [...state.messages, { ...message, id, timestamp, role }],
+      }));
+    },
+    updateMessage: async (message) => {
+      set((state) => ({
+        messages: state.messages.map((m) =>
+          m.id === message.id ? { ...m, ...message } : m
+        ),
       }));
     },
     clearMessages: () => set({ messages: [] }),

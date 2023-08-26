@@ -5,6 +5,7 @@ import { Paper, Grid, Avatar } from "@mantine/core";
 import type { IMessage } from "@/libs/stores/message";
 
 const MessageText = dynamic(() => import("../MessageText"));
+const MessageImage = dynamic(() => import("../MessageImage"));
 
 type MessageProps = IMessage;
 
@@ -15,6 +16,8 @@ const MessageContainer = ({ role, type, ...rest }: MessageProps) => {
     switch (type) {
       case "text":
         return MessageText;
+      case "image":
+        return MessageImage;
       default:
         return null;
     }
