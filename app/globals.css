@@ -4,9 +4,14 @@
 @tailwind components;
 @tailwind utilities;
 
-@supports (-webkit-touch-callout: none) {
+@supports (height:100cqh) {
   .h-screen {
-    height: 100vh;
-    max-height: -webkit-fill-available !important;
+    height: 100cqh;
+  }
+}
+
+@supports (height:100svh) {
+  .h-screen {
+    height: 100svh;
   }
 }
