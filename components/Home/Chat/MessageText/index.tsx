@@ -5,7 +5,11 @@ import { type IMessageText } from "@/libs/stores/message";
 type MessageTextProps = Omit<IMessageText, "type">;
 
 const MessageText = ({ text }: MessageTextProps) => {
-  return <Text size="sm">{text}</Text>;
+  return (
+    <Text size="sm" className="break-all">
+      {text}
+    </Text>
+  );
 };
 
 export default MessageText;
