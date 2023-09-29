@@ -6,6 +6,7 @@ import type { IMessage } from "@/libs/stores/message";
 
 const MessageText = dynamic(() => import("../MessageText"));
 const MessageImage = dynamic(() => import("../MessageImage"));
+const MessageChart = dynamic(() => import("../MessageChart"));
 
 type MessageProps = IMessage;
 
@@ -18,6 +19,8 @@ const MessageContainer = ({ role, type, ...rest }: MessageProps) => {
         return MessageText;
       case "image":
         return MessageImage;
+      case "chart":
+        return MessageChart;
       default:
         return null;
     }
@@ -29,7 +32,11 @@ const MessageContainer = ({ role, type, ...rest }: MessageProps) => {
         <Grid.Col span="content" order={isSender ? 2 : 1}>
           <Avatar radius="sm" />
         </Grid.Col>
-        <Grid.Col span="auto" order={isSender ? 1 : 2}>
+        <Grid.Col
+          span="auto"
+          order={isSender ? 1 : 2}
+          className="overflow-hidden"
+        >
           {MessageComponent && <MessageComponent role={role} {...rest} />}
         </Grid.Col>
       </Grid>

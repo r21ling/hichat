@@ -1,7 +1,7 @@
 import { createWithEqualityFn } from "zustand/traditional";
 import { nanoid } from "nanoid";
 
-export type MessageType = "text" | "image";
+export type MessageType = "text" | "image" | "chart";
 export interface IMessage {
   id: string;
   timestamp?: number;
@@ -20,13 +20,16 @@ export interface IMessageImage extends IMessage {
   state?: "loading" | "loaded" | "error";
 }
 
+export interface IMessageChart extends IMessage {
+  type: "chart";
+  payload?: {
+    data?: { x: string; y: number }[];
+  };
+}
+
 type MessageStore = {
   messages: IMessage[];
-  createMessage: <
-    T extends Omit<IMessageText, "id"> | Omit<IMessageImage, "id">
-  >(
-    message: T
-  ) => void;
+  createMessage: <T extends Omit<IMessageText, "id">>(message: T) => void;
   updateMessage: <T extends IMessage>(
     message: Partial<T> & { id: IMessage["id"] }
   ) => void;
@@ -69,8 +72,15 @@ export const useMessageStore = createWithEqualityFn<MessageStore>(
       },
       {
         id: "7",
-        text: "!",
-        type: "text",
+        type: "chart",
+        payload: {
+          data: [
+            { x: "A", y: 1 },
+            { x: "B", y: 2.88 },
+            { x: "C", y: 3.8 },
+            { x: "D", y: 4.2 },
+          ],
+        },
       },
     ],
     createMessage: async (message) => {
