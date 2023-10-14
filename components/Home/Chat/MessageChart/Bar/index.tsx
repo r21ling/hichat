@@ -10,7 +10,6 @@ import { Group } from "@visx/group";
 import { scaleBand, scaleLinear } from "@visx/scale";
 import { AxisBottom, AxisLeft } from "@visx/axis";
 import { AnimatedGridRows, AnimatedGridColumns } from "@visx/react-spring";
-import { Grid } from "@visx/grid";
 import { Text } from "@visx/text";
 import { useTooltip, defaultStyles, useTooltipInPortal } from "@visx/tooltip";
 import { localPoint } from "@visx/event";
