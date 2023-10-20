@@ -1,20 +1,19 @@
 import { useState } from "react";
-import { Stack, Flex, SegmentedControl } from "@mantine/core";
 import { ParentSize } from "@visx/responsive";
-
+import { Stack, Flex, SegmentedControl } from "@mantine/core";
 import type { IMessageChart } from "@/libs/stores/message";
 
-import Bar from "./Bar";
+import Chart from "./Chart";
 
 const MessageChart = ({ payload }: Omit<IMessageChart, "type">) => {
-  const [chartType, setChartType] = useState("bar");
+  const [seriesType, setSeriesType] = useState("bar");
 
   return (
     <Stack>
       <Flex>
         <SegmentedControl
-          value={chartType}
-          onChange={setChartType}
+          value={seriesType}
+          onChange={setSeriesType}
           data={[
             { label: "Bar", value: "bar" },
             { label: "Line", value: "line" },
@@ -22,21 +21,20 @@ const MessageChart = ({ payload }: Omit<IMessageChart, "type">) => {
           ]}
         />
       </Flex>
-
       <ParentSize
-        debounceTime={10}
         style={{
           width: "100%",
-          height: "42vh",
+          height: "48vh",
           overflow: "hidden",
         }}
       >
         {({ width, height }) => (
-          <>
-            {chartType === "bar" && (
-              <Bar width={width} height={height} {...payload} />
-            )}
-          </>
+          <Chart
+            seriesType={seriesType}
+            width={width}
+            height={height}
+            {...payload}
+          />
         )}
       </ParentSize>
     </Stack>

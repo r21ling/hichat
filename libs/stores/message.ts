@@ -1,5 +1,8 @@
 import { createWithEqualityFn } from "zustand/traditional";
 import { nanoid } from "nanoid";
+import cityTemperature from "@visx/mock-data/lib/mocks/cityTemperature";
+
+import { transferChartMessage } from "@/libs/utils/transferChartMessage";
 
 export type MessageType = "text" | "image" | "chart";
 export interface IMessage {
@@ -23,7 +26,12 @@ export interface IMessageImage extends IMessage {
 export interface IMessageChart extends IMessage {
   type: "chart";
   payload?: {
-    data?: { x: string; y: number }[];
+    data?: {
+      [x: string]: {
+        x: string;
+        y: string;
+      }[];
+    }[];
   };
 }
 
@@ -74,12 +82,7 @@ export const useMessageStore = createWithEqualityFn<MessageStore>(
         id: "7",
         type: "chart",
         payload: {
-          data: [
-            { x: "A", y: 1 },
-            { x: "B", y: 2.88 },
-            { x: "C", y: 3.8 },
-            { x: "D", y: 4.2 },
-          ],
+          data: transferChartMessage(cityTemperature.slice(0, 10)),
         },
       },
     ],
