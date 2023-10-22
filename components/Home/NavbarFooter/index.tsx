@@ -69,14 +69,20 @@ export default function Footer() {
     <>
       <SimpleGrid cols={3} spacing={0}>
         <Tooltip label={isLoggedIn ? "Log Out" : "Log In"}>
-          <ButtonWithIcon onClick={() => handleLogin()}>
+          <ButtonWithIcon
+            onClick={() => handleLogin()}
+            style={{ width: "100%" }}
+          >
             {isLoggedIn ? <IconLogout size={24} /> : <IconLogin size={24} />}
           </ButtonWithIcon>
         </Tooltip>
         <Tooltip
           label={computedColorScheme === "light" ? "Dark Mode" : "Light Mode"}
         >
-          <ButtonWithIcon onClick={() => toggleColorScheme()}>
+          <ButtonWithIcon
+            onClick={() => toggleColorScheme()}
+            style={{ width: "100%" }}
+          >
             {computedColorScheme === "light" ? (
               <IconSun size={24} />
             ) : (
@@ -85,7 +91,7 @@ export default function Footer() {
           </ButtonWithIcon>
         </Tooltip>
         <Tooltip label="Settings">
-          <ButtonWithIcon aria-label="Settings">
+          <ButtonWithIcon aria-label="Settings" style={{ width: "100%" }}>
             <IconSettings size={24} />
           </ButtonWithIcon>
         </Tooltip>

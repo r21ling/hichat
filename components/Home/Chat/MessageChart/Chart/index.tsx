@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   AnimatedBarSeries,
   AnimatedLineSeries,
@@ -10,9 +11,10 @@ import {
   lightTheme,
   darkTheme,
 } from "@visx/xychart";
-
 import { useComputedColorScheme } from "@mantine/core";
 import { Box, Flex, Title, Text } from "@mantine/core";
+
+import { useMediaMobile } from "@/libs/hooks/use-media-mobile";
 
 interface IData {
   x: string;
@@ -24,23 +26,30 @@ interface ChartControlProps {
   seriesType?: string;
   width: number;
   height: number;
+  margin?: {
+    top?: number;
+    bottom?: number;
+    left?: number;
+    right?: number;
+  };
 }
 
 // accessors
 const getX = (d: IData) => d.x;
 const getY = (d: IData) => d.y;
 
-const numTicks = 4;
-
 const ChartControl = ({
   data = [],
   seriesType,
   width,
   height,
+  margin,
 }: ChartControlProps) => {
   const computedColorScheme = useComputedColorScheme("light", {
     getInitialValueInEffect: true,
   });
+  const isMobile = useMediaMobile();
+  const numTicks = useMemo(() => (isMobile ? 3 : 5), [isMobile]);
 
   if (width < 10) {
     return null;
@@ -53,10 +62,16 @@ const ChartControl = ({
       theme={computedColorScheme === "dark" ? darkTheme : lightTheme}
       xScale={{ type: "band", paddingInner: 0.4, paddingOuter: 0.4 }}
       yScale={{ type: "linear" }}
+      margin={{
+        top: 20,
+        bottom: 40,
+        left: 40,
+        right: 20,
+        ...(margin ?? {}),
+      }}
     >
       <AnimatedAxis
         orientation="left"
-        numTicks={numTicks}
         animationTrajectory="min"
         tickLabelProps={{
           fontSize: 14,
@@ -71,7 +86,7 @@ const ChartControl = ({
         numTicks={numTicks}
       />
       <AnimatedGrid
-        columns={false}
+        columns
         rows
         animationTrajectory="center"
         strokeDasharray="2,2"
@@ -79,7 +94,6 @@ const ChartControl = ({
           stroke: "var(--mantine-color-dark-0)",
           strokeWidth: 1,
         }}
-        numTicks={numTicks}
       />
 
       <AnimatedBarGroup>
