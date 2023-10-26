@@ -1,4 +1,5 @@
-import { useMemo, useEffect, forwardRef } from "react";
+import { useMemo, forwardRef } from "react";
+import { useRouter } from "next/navigation";
 import {
   SimpleGrid,
   ActionIcon,
@@ -14,13 +15,8 @@ import {
   IconMoon,
   IconSettings,
 } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
+import { useAuth } from "@clerk/nextjs";
 import useEvent from "react-use-event-hook";
-import dynamic from "next/dynamic";
-import { useDisclosure } from "@mantine/hooks";
-
-const AuthModal = dynamic(() => import("@/components/AuthModal"));
 
 const ButtonWithIcon = forwardRef<
   HTMLButtonElement,
@@ -41,29 +37,22 @@ const ButtonWithIcon = forwardRef<
 });
 
 export default function Footer() {
+  const router = useRouter();
   const { toggleColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme("light", {
     getInitialValueInEffect: true,
   });
 
-  const { status } = useSession();
-  const isLoggedIn = useMemo(() => status === "authenticated", [status]);
-
-  const [signInOpened, { open, close }] = useDisclosure();
+  const { isSignedIn, signOut } = useAuth();
+  const isLoggedIn = useMemo(() => isSignedIn, [isSignedIn]);
 
   const handleLogin = useEvent(() => {
     if (isLoggedIn) {
       signOut();
     } else {
-      open();
+      router.push("/sign-in");
     }
   });
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      close();
-    }
-  }, [close, isLoggedIn]);
 
   return (
     <>
@@ -96,8 +85,6 @@ export default function Footer() {
           </ButtonWithIcon>
         </Tooltip>
       </SimpleGrid>
-
-      <AuthModal opened={signInOpened} onClose={close} />
     </>
   );
 }

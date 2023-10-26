@@ -15,14 +15,13 @@ import {
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
-import { SessionProvider } from "next-auth/react";
 
 const NavbarFooter = dynamic(() => import("./NavbarFooter"));
 const Main = dynamic(() => import("./Main"), {
   ssr: false,
 });
 
-function NavbarSection() {
+export default function App() {
   const [opened, { toggle }] = useDisclosure();
 
   return (
@@ -65,13 +64,5 @@ function NavbarSection() {
         <Main />
       </AppShell.Main>
     </AppShell>
-  );
-}
-
-export default function App() {
-  return (
-    <SessionProvider session={null}>
-      <NavbarSection />
-    </SessionProvider>
   );
 }

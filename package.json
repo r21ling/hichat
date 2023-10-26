@@ -10,6 +10,7 @@
   },
   "packageManager": "pnpm@8.6.12",
   "dependencies": {
+    "@clerk/nextjs": "^4.25.7",
     "@mantine/core": "7.1.5",
     "@mantine/hooks": "7.1.5",
     "@tabler/icons-react": "^2.39.0",
@@ -21,7 +22,6 @@
     "eslint-config-next": "13.5.6",
     "nanoid": "^5.0.2",
     "next": "13.5.6",
-    "next-auth": "^4.24.3",
     "postcss": "8.4.31",
     "react": "18.2.0",
     "react-dom": "18.2.0",

@@ -8,7 +8,7 @@ import {
   useComputedColorScheme,
   Box,
 } from "@mantine/core";
-import { useSession } from "next-auth/react";
+import { useAuth } from "@clerk/nextjs";
 import dynamic from "next/dynamic";
 import { useEvent } from "react-use-event-hook";
 
@@ -16,7 +16,7 @@ const Chat = dynamic(() => import("../Chat"));
 const KeyboardInput = dynamic(() => import("./KeyboardInput"));
 
 export default function Main() {
-  const { status } = useSession();
+  const { isSignedIn, isLoaded } = useAuth();
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const computedColorScheme = useComputedColorScheme("light", {
@@ -42,7 +42,10 @@ export default function Main() {
         <Stack mt="md">
           <Group>
             <Text>Login Status:</Text>
-            <Text>{status}</Text>
+            {!isLoaded && <Text>Loading...</Text>}
+            {isLoaded && (
+              <Text>{isSignedIn ? "authenticated" : "unAuthenticated"}</Text>
+            )}
           </Group>
 
           <Chat />
