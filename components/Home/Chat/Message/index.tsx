@@ -1,6 +1,7 @@
 import { useMemo, memo } from "react";
 import dynamic from "next/dynamic";
 import { Paper, Grid, Avatar, Flex } from "@mantine/core";
+import { useUser } from "@clerk/nextjs";
 
 import { useMediaMobile } from "@/libs/hooks/use-media-mobile";
 import type { IMessage } from "@/libs/stores/message";
@@ -12,6 +13,7 @@ const MessageChart = dynamic(() => import("../MessageChart"));
 type MessageProps = IMessage;
 
 const MessageContainer = ({ role, type, ...rest }: MessageProps) => {
+  const { user } = useUser();
   const isMobile = useMediaMobile();
   const isSender = useMemo(() => role === "sender", [role]);
 
@@ -42,7 +44,7 @@ const MessageContainer = ({ role, type, ...rest }: MessageProps) => {
           order={!isMobile && isSender ? 2 : 1}
         >
           <Flex justify={isMobile && isSender ? "flex-end" : "start"}>
-            <Avatar radius="sm" />
+            <Avatar radius="xl" src={isSender ? user?.imageUrl : undefined} />
           </Flex>
         </Grid.Col>
         <Grid.Col
