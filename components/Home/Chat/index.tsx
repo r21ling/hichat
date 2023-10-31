@@ -1,11 +1,8 @@
-import { shallow } from "zustand/shallow";
-
-import { useMessageStore } from "@/libs/stores/message";
-
 import Message from "./Message";
+import { useMessageByActiveChannel } from "./hooks";
 
 const Chat = () => {
-  const { messages } = useMessageStore((state) => state, shallow);
+  const { messages } = useMessageByActiveChannel();
 
   return (
     <>

@@ -37,6 +37,7 @@ export interface IMessageChart extends IMessage {
 
 type MessageStore = {
   messages: IMessage[];
+  setMessages: (messages: IMessage[]) => void;
   createMessage: <T extends Omit<IMessageText, "id">>(message: T) => void;
   updateMessage: <T extends IMessage>(
     message: Partial<T> & { id: IMessage["id"] }
@@ -86,6 +87,7 @@ export const useMessageStore = createWithEqualityFn<MessageStore>(
         },
       },
     ],
+    setMessages: (messages) => set({ messages }),
     createMessage: async (message) => {
       const timestamp = Date.now();
       const id = nanoid();
