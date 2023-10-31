@@ -57,7 +57,6 @@ const Channel = () => {
     if (!channelToDelete) return;
 
     deleteChannel(channelToDelete).then(() => {
-      refresh();
       setChannelToDelete(undefined);
       close();
     });

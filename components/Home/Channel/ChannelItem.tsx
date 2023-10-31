@@ -1,4 +1,4 @@
-import { NavLink, ActionIcon, Grid, Menu, Text } from "@mantine/core";
+import { NavLink, ActionIcon, Grid, Menu } from "@mantine/core";
 import { IconMenu, IconTrash } from "@tabler/icons-react";
 
 import type { Channel } from "@/libs/stores/channel";
@@ -30,20 +30,10 @@ const ChannelItem = ({
               <Menu.Dropdown>
                 <Menu.Item
                   onClick={() => onDelete?.()}
-                  leftSection={
-                    <ActionIcon
-                      variant="transparent"
-                      color="red"
-                      aria-label="Menu"
-                      size="xs"
-                    >
-                      <IconTrash size={14} />
-                    </ActionIcon>
-                  }
+                  leftSection={<IconTrash size={14} />}
+                  c="red"
                 >
-                  <Text c="red" size="xs">
-                    Delete
-                  </Text>
+                  Delete
                 </Menu.Item>
               </Menu.Dropdown>
             </Grid.Col>

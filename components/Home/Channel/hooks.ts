@@ -40,6 +40,29 @@ export function useChannel() {
       getUserChannels();
     }
   }, [getUserChannels, isSignedIn, supabase]);
+  useEffect(() => {
+    if (isSignedIn && supabase) {
+      supabase
+        .channel("channels")
+        .on(
+          "postgres_changes",
+          {
+            event: "*",
+            schema: "public",
+            table: "channels",
+          },
+          () => {
+            console.log("channel changed");
+            getUserChannels();
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.channel("channels").unsubscribe();
+      };
+    }
+  }, [getUserChannels, isSignedIn, supabase]);
 
   return { refresh: getUserChannels, createChannel, deleteChannel };
 }
