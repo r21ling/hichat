@@ -5,7 +5,6 @@ import {
   AppShell,
   Burger,
   Group,
-  Skeleton,
   ScrollArea,
   Text,
   SegmentedControl,
@@ -16,6 +15,7 @@ import {
 import { IconSearch } from "@tabler/icons-react";
 import dynamic from "next/dynamic";
 
+const Channel = dynamic(() => import("./Channel"));
 const NavbarFooter = dynamic(() => import("./NavbarFooter"));
 const Main = dynamic(() => import("./Main"), {
   ssr: false,
@@ -49,12 +49,7 @@ export default function App() {
           </Stack>
         </AppShell.Section>
         <AppShell.Section grow my="md" component={ScrollArea}>
-          60 links in a scrollable section
-          {Array(60)
-            .fill(0)
-            .map((_, index) => (
-              <Skeleton key={index} h={28} mt="sm" animate={false} />
-            ))}
+          <Channel />
         </AppShell.Section>
         <AppShell.Section>
           <NavbarFooter />
