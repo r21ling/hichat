@@ -12,23 +12,18 @@ const MessageChart = dynamic(() => import("../MessageChart"));
 
 type MessageProps = IMessage;
 
-const MessageContainer = ({ role, type, ...rest }: MessageProps) => {
+const MessageView = {
+  text: MessageText,
+  image: MessageImage,
+  chart: MessageChart,
+};
+
+const MessageContainer = ({ type, ...rest }: MessageProps) => {
   const { user } = useUser();
   const isMobile = useMediaMobile();
-  const isSender = useMemo(() => role === "sender", [role]);
+  const isSender = useMemo(() => rest?.sender_id === user?.id, [rest, user]);
 
-  const MessageComponent = useMemo(() => {
-    switch (type) {
-      case "text":
-        return MessageText;
-      case "image":
-        return MessageImage;
-      case "chart":
-        return MessageChart;
-      default:
-        return null;
-    }
-  }, [type]);
+  const MessageComponent = useMemo(() => MessageView[type], [type]);
 
   return (
     <Paper
@@ -52,7 +47,7 @@ const MessageContainer = ({ role, type, ...rest }: MessageProps) => {
           order={isSender ? 1 : 2}
           className="overflow-hidden"
         >
-          {MessageComponent && <MessageComponent role={role} {...rest} />}
+          {MessageComponent && <MessageComponent {...rest} />}
         </Grid.Col>
       </Grid>
     </Paper>

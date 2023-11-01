@@ -4,22 +4,35 @@ import { IconSend } from "@tabler/icons-react";
 import { shallow } from "zustand/shallow";
 import { useEvent } from "react-use-event-hook";
 
-import { useMessageStore } from "@/libs/stores/message";
+import { useChannelStore } from "@/libs/stores/channel";
+import { useMessage } from "../Chat/hooks";
 
 export default function KeyboardInput({ onSend }: { onSend?: () => void }) {
-  const { createMessage } = useMessageStore((state) => state, shallow);
+  const { activeChannel } = useChannelStore(
+    (state) => ({
+      activeChannel: state.activeChannel,
+    }),
+    shallow
+  );
+  const { sendMessage } = useMessage();
   const [text, setText] = useState("");
 
-  const sendMessage = useEvent(async () => {
+  const handleSendMessage = useEvent(async () => {
     if (!text) return;
 
-    await createMessage({
-      text,
+    await sendMessage({
       type: "text",
+      payload: {
+        text,
+      },
     });
     setText("");
     onSend?.();
   });
+
+  if (!activeChannel) {
+    return null;
+  }
 
   return (
     <Box>
@@ -36,7 +49,7 @@ export default function KeyboardInput({ onSend }: { onSend?: () => void }) {
               onKeyDown={(event) => {
                 if (event.key === "Enter" && !event.shiftKey) {
                   event.preventDefault();
-                  sendMessage();
+                  handleSendMessage();
                 }
               }}
             />
@@ -48,7 +61,7 @@ export default function KeyboardInput({ onSend }: { onSend?: () => void }) {
               color="gray"
               className="w-20"
               size="xl"
-              onClick={() => sendMessage()}
+              onClick={() => handleSendMessage()}
             >
               <IconSend />
             </ActionIcon>

@@ -1,26 +1,25 @@
 import { createWithEqualityFn } from "zustand/traditional";
-import { nanoid } from "nanoid";
-import cityTemperature from "@visx/mock-data/lib/mocks/cityTemperature";
+// import { v4 as uuidv4 } from "uuid";
+// import cityTemperature from "@visx/mock-data/lib/mocks/cityTemperature";
 
-import { transferChartMessage } from "@/libs/utils/transferChartMessage";
+// import { transferChartMessage } from "@/libs/utils/transferChartMessage";
+
+const uniqBy = <T extends { uuid: string }>(array: T[]) => {
+  const map = new Map<string, T>();
+  for (const item of array) {
+    map.set(item.uuid, item);
+  }
+  return Array.from(map.values());
+};
 
 export type MessageType = "text" | "image" | "chart";
 export interface IMessage {
   id: string;
+  uuid: string;
   timestamp?: number;
-  role?: "sender" | "receiver";
+  sender_id?: string;
   type: MessageType;
-}
-
-export interface IMessageText extends IMessage {
-  text?: string;
-  type: "text";
-}
-
-export interface IMessageImage extends IMessage {
-  image?: string;
-  type: "image";
-  state?: "loading" | "loaded" | "error";
+  payload?: Record<string, any>;
 }
 
 export interface IMessageChart extends IMessage {
@@ -36,74 +35,65 @@ export interface IMessageChart extends IMessage {
 }
 
 type MessageStore = {
-  messages: IMessage[];
-  setMessages: (messages: IMessage[]) => void;
-  createMessage: <T extends Omit<IMessageText, "id">>(message: T) => void;
-  updateMessage: <T extends IMessage>(
-    message: Partial<T> & { id: IMessage["id"] }
-  ) => void;
-  clearMessages: () => void;
+  channelMessageMap: Map<string, IMessage[]>;
+  setMessagesByChannelId: (channelId: string, messages: IMessage[]) => void;
 };
 
 export const useMessageStore = createWithEqualityFn<MessageStore>(
   (set) => ({
     messages: [
-      {
-        id: "1",
-        text: "Hello",
-        type: "text",
-      },
-      {
-        id: "2",
-        text: "World",
-        type: "text",
-        role: "sender",
-      },
-      {
-        id: "3",
-        text: "!",
-        type: "text",
-      },
-      {
-        id: "4",
-        type: "image",
-        image: "https://picsum.photos/200/300",
-      },
-      {
-        id: "5",
-        text: "!",
-        type: "text",
-      },
-      {
-        id: "6",
-        text: "!",
-        type: "text",
-      },
-      {
-        id: "7",
-        type: "chart",
-        payload: {
-          data: transferChartMessage(cityTemperature.slice(0, 10)),
-        },
-      },
+      // {
+      //   id: "1",
+      //   uuid: "1",
+      //   text: "Hello",
+      //   type: "text",
+      // },
+      // {
+      //   id: "2",
+      //   text: "World",
+      //   type: "text",
+      //   role: "sender",
+      // },
+      // {
+      //   id: "3",
+      //   text: "!",
+      //   type: "text",
+      // },
+      // {
+      //   id: "4",
+      //   type: "image",
+      //   image: "https://picsum.photos/200/300",
+      // },
+      // {
+      //   id: "5",
+      //   text: "!",
+      //   type: "text",
+      // },
+      // {
+      //   id: "6",
+      //   text: "!",
+      //   type: "text",
+      // },
+      // {
+      //   id: "7",
+      //   type: "chart",
+      //   payload: {
+      //     data: transferChartMessage(cityTemperature.slice(0, 10)),
+      //   },
+      // },
     ],
-    setMessages: (messages) => set({ messages }),
-    createMessage: async (message) => {
-      const timestamp = Date.now();
-      const id = nanoid();
-      const role = "sender";
-      set((state) => ({
-        messages: [...state.messages, { ...message, id, timestamp, role }],
-      }));
+    channelMessageMap: new Map(),
+    setMessagesByChannelId: (channelId, messages) => {
+      set((state) => {
+        const channelMessageMap = new Map(state.channelMessageMap);
+        const mergeMessages = uniqBy<IMessage>([
+          ...(channelMessageMap.get(channelId) ?? []),
+          ...messages,
+        ]);
+        channelMessageMap.set(channelId, mergeMessages);
+        return { channelMessageMap };
+      });
     },
-    updateMessage: async (message) => {
-      set((state) => ({
-        messages: state.messages.map((m) =>
-          m.id === message.id ? { ...m, ...message } : m
-        ),
-      }));
-    },
-    clearMessages: () => set({ messages: [] }),
   }),
   Object.is
 );

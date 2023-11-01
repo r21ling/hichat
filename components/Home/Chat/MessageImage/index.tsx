@@ -1,25 +1,13 @@
+import { useState } from "react";
 import { Box, Image, LoadingOverlay, rem } from "@mantine/core";
 import { useFullscreen } from "@mantine/hooks";
-import { shallow } from "zustand/shallow";
-import { useEvent } from "react-use-event-hook";
+import type { IMessage } from "@/libs/stores/message";
 
-import { useMessageStore, type IMessageImage } from "@/libs/stores/message";
+type MessageImageProps = Omit<IMessage, "type">;
 
-type MessageImageProps = Omit<IMessageImage, "type">;
-
-const MessageImage = ({ image, state, ...rest }: MessageImageProps) => {
-  const { updateMessage } = useMessageStore((state) => state, shallow);
-
+const MessageImage = ({ payload }: MessageImageProps) => {
   const { ref, toggle } = useFullscreen();
-  const handleUpdateMessageState = useEvent(
-    (newState: IMessageImage["state"]) => {
-      updateMessage<IMessageImage>({
-        ...rest,
-        image,
-        state: newState,
-      });
-    }
-  );
+  const [state, setState] = useState<"loading" | "loaded" | "error">();
 
   return (
     <Box pos="relative" w={rem(200)} h={rem(200)}>
@@ -30,15 +18,15 @@ const MessageImage = ({ image, state, ...rest }: MessageImageProps) => {
       />
       <Image
         ref={ref}
-        src={image}
+        src={payload?.image}
         fallbackSrc="https://placehold.co/200x200?text=Fallback"
         fit="cover"
         h="100%"
         radius="md"
         alt="message-image"
         onClick={() => toggle()}
-        onLoad={() => handleUpdateMessageState("loaded")}
-        onError={() => handleUpdateMessageState("error")}
+        onLoad={() => setState("loaded")}
+        onError={() => setState("error")}
       />
     </Box>
   );

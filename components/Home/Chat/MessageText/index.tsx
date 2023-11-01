@@ -1,13 +1,13 @@
 import { Text } from "@mantine/core";
 
-import { type IMessageText } from "@/libs/stores/message";
+import type { IMessage } from "@/libs/stores/message";
 
-type MessageTextProps = Omit<IMessageText, "type">;
+type MessageTextProps = Omit<IMessage, "type">;
 
-const MessageText = ({ text }: MessageTextProps) => {
+const MessageText = ({ payload }: MessageTextProps) => {
   return (
     <Text size="sm" className="break-all">
-      {text}
+      {payload?.text}
     </Text>
   );
 };

@@ -69,7 +69,7 @@ const Channel = () => {
         variant="outline"
         onClick={() => router.push("/sign-in")}
       >
-        Sign in to create a channel
+        Log in to create a channel
       </Button>
     );
   }
