@@ -17,17 +17,19 @@ export default function KeyboardInput({ onSend }: { onSend?: () => void }) {
   const { sendMessage } = useMessage();
   const [text, setText] = useState("");
 
-  const handleSendMessage = useEvent(async () => {
+  const handleSendMessage = useEvent(() => {
     if (!text) return;
 
-    await sendMessage({
+    sendMessage({
       type: "text",
       payload: {
         text,
       },
     });
     setText("");
-    onSend?.();
+    requestAnimationFrame(() => {
+      onSend?.();
+    });
   });
 
   if (!activeChannel) {

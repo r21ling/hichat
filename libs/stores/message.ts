@@ -1,13 +1,12 @@
 import { createWithEqualityFn } from "zustand/traditional";
-// import { v4 as uuidv4 } from "uuid";
 // import cityTemperature from "@visx/mock-data/lib/mocks/cityTemperature";
 
 // import { transferChartMessage } from "@/libs/utils/transferChartMessage";
 
-const uniqBy = <T extends { uuid: string }>(array: T[]) => {
+const uniqBy = <T extends { id: string }>(array: T[]) => {
   const map = new Map<string, T>();
   for (const item of array) {
-    map.set(item.uuid, item);
+    map.set(item.id, item);
   }
   return Array.from(map.values());
 };
@@ -15,7 +14,6 @@ const uniqBy = <T extends { uuid: string }>(array: T[]) => {
 export type MessageType = "text" | "image" | "chart";
 export interface IMessage {
   id: string;
-  uuid: string;
   timestamp?: number;
   sender_id?: string;
   type: MessageType;
@@ -44,7 +42,6 @@ export const useMessageStore = createWithEqualityFn<MessageStore>(
     messages: [
       // {
       //   id: "1",
-      //   uuid: "1",
       //   text: "Hello",
       //   type: "text",
       // },

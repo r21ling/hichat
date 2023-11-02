@@ -8,6 +8,11 @@ import { useChannelStore } from "@/libs/stores/channel";
 import { useSupabase } from "@/libs/hooks/use-supabase";
 import { useMessageStore, type IMessage } from "@/libs/stores/message";
 
+/**
+ * @description
+ * This hook is used to fetch all the channels from the database
+ * and subscribe to the changes in the channels table.
+ */
 export function useChannelMessage() {
   const supabase = useSupabase();
   const { channels } = useChannelStore(
@@ -16,10 +21,9 @@ export function useChannelMessage() {
     }),
     shallow
   );
-  const { setMessagesByChannelId, channelMessageMap } = useMessageStore(
+  const { setMessagesByChannelId } = useMessageStore(
     (state) => ({
       setMessagesByChannelId: state.setMessagesByChannelId,
-      channelMessageMap: state.channelMessageMap,
     }),
     shallow
   );
@@ -49,12 +53,19 @@ export function useChannelMessage() {
         .on(
           "postgres_changes",
           {
-            event: "*",
+            event: "INSERT",
             schema: "public",
             table: "messages",
+            filter: `channel_id=in.(${channels
+              ?.map((channel) => channel.id)
+              .join(",")})`,
           },
           (payload) => {
             console.log("messages changed", payload);
+            const { new: newMessage } = payload;
+            setMessagesByChannelId(newMessage.channel_id, [
+              newMessage as IMessage,
+            ]);
           }
         )
         .subscribe();
@@ -63,7 +74,7 @@ export function useChannelMessage() {
         supabase.channel("messages").unsubscribe();
       };
     }
-  }, [supabase]);
+  }, [channels, setMessagesByChannelId, supabase]);
 }
 
 export function useMessage() {
@@ -82,27 +93,27 @@ export function useMessage() {
     shallow
   );
 
-  const sendMessage = useEvent(
-    async (message: Omit<IMessage, "id" | "uuid">) => {
-      if (supabase && userId && activeChannel?.id) {
-        const channelId = activeChannel?.id;
-        const { data, error } = await supabase
-          ?.from("messages")
-          .insert({
-            ...message,
-            uuid: uuidv4(),
-            sender_id: userId,
-            channel_id: channelId,
-          })
-          .select("*");
-        if (error) {
-          throw error;
-        }
-        setMessagesByChannelId(channelId, data);
-        return data;
+  const sendMessage = useEvent(async (message: Omit<IMessage, "id">) => {
+    if (supabase && userId && activeChannel?.id) {
+      const channelId = activeChannel?.id;
+      const newMessage = {
+        ...message,
+        id: uuidv4(),
+        sender_id: userId,
+        channel_id: channelId,
+      };
+      setMessagesByChannelId(channelId, [newMessage]);
+
+      const { data, error } = await supabase
+        ?.from("messages")
+        .insert(newMessage)
+        .select("*");
+      if (error) {
+        throw error;
       }
+      return data;
     }
-  );
+  });
 
   return {
     sendMessage,
