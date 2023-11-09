@@ -18,7 +18,14 @@ import { useEvent } from "react-use-event-hook";
 
 import { useChannelStore, type Channel } from "@/libs/stores/channel";
 import ChannelItem from "./ChannelItem";
-import { useChannel } from "./hooks";
+import {
+  useListenChannel,
+  useGetChannel,
+  useCreateChannel,
+  useDeleteChannel,
+} from "./hooks";
+
+const defaultChannelName = "New Channel";
 
 const Channel = () => {
   const { isSignedIn } = useAuth();
@@ -37,10 +44,13 @@ const Channel = () => {
     Channel["id"] | undefined
   >();
 
-  const { refresh, createChannel, deleteChannel } = useChannel();
+  useListenChannel();
+  const { refetch } = useGetChannel();
+  const { mutateAsync: createChannel } = useCreateChannel();
+  const { mutateAsync: deleteChannel } = useDeleteChannel();
 
   const [{ value: newChannelName, lastValidValue, valid }, setNewChannelName] =
-    useValidatedState("New Channel", (val) => !!val, true);
+    useValidatedState(defaultChannelName, (val) => !!val, true);
   const [editing, setEditing] = useState(false);
 
   const handleCreateChannel = useEvent(() => {
@@ -50,7 +60,8 @@ const Channel = () => {
       name: lastValidValue,
     })?.then(() => {
       setEditing(false);
-      refresh();
+      setNewChannelName(defaultChannelName);
+      refetch();
     });
   });
   const handleDeleteChannel = useEvent(() => {
