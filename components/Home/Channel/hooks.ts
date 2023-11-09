@@ -73,7 +73,6 @@ export function useCreateChannel() {
     supabase
       ?.from("channels")
       .insert([{ name: channel?.name, user_id: userId }])
-      .single()
   );
 
   return useMutation({

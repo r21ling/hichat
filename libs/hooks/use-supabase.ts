@@ -1,11 +1,24 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
+import { createWithEqualityFn } from "zustand/traditional";
+import { shallow } from "zustand/shallow";
 import {
   createClient,
   type SupabaseClient,
   type PostgrestError,
 } from "@supabase/supabase-js";
 import { useEvent } from "react-use-event-hook";
+
+export const useSupabaseStore = createWithEqualityFn<{
+  supabase: SupabaseClient | undefined;
+  setSupabase: (supabase: SupabaseClient) => void;
+}>(
+  (set) => ({
+    supabase: undefined,
+    setSupabase: (supabase) => set({ supabase }),
+  }),
+  Object.is
+);
 
 const supabaseClient = (supabaseAccessToken: string) =>
   createClient(
@@ -18,24 +31,28 @@ const supabaseClient = (supabaseAccessToken: string) =>
 
 export function useSupabase() {
   const { getToken, isSignedIn } = useAuth();
-  const [supabaseInstance, setSupabaseInstance] = useState<
-    SupabaseClient | undefined
-  >();
+  const { supabase, setSupabase } = useSupabaseStore(
+    (state) => ({
+      supabase: state.supabase,
+      setSupabase: state.setSupabase,
+    }),
+    shallow
+  );
 
   const fetchData = useEvent(async () => {
     const supabaseAccessToken = await getToken({ template: "supabase" });
 
     const supabase = await supabaseClient(supabaseAccessToken as string);
-    setSupabaseInstance(supabase);
+    setSupabase(supabase);
   });
 
   useEffect(() => {
-    if (isSignedIn) {
+    if (isSignedIn && !supabase) {
       fetchData();
     }
-  }, [fetchData, isSignedIn]);
+  }, [fetchData, isSignedIn, supabase]);
 
-  return supabaseInstance;
+  return supabase;
 }
 
 type Result<T> = {
