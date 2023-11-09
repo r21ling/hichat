@@ -5,7 +5,7 @@ import { shallow } from "zustand/shallow";
 import { useEvent } from "react-use-event-hook";
 
 import { useChannelStore } from "@/libs/stores/channel";
-import { useMessage } from "../Chat/hooks";
+import { useCreateMessage } from "../Chat/hooks";
 
 export default function KeyboardInput({ onSend }: { onSend?: () => void }) {
   const { activeChannel } = useChannelStore(
@@ -14,7 +14,7 @@ export default function KeyboardInput({ onSend }: { onSend?: () => void }) {
     }),
     shallow
   );
-  const { sendMessage } = useMessage();
+  const { mutateAsync: sendMessage } = useCreateMessage();
   const [text, setText] = useState("");
 
   const handleSendMessage = useEvent(() => {

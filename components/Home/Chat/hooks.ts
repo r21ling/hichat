@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { shallow } from "zustand/shallow";
 import { useAuth } from "@clerk/nextjs";
 import { useEvent } from "react-use-event-hook";
+import { useMutation } from "@tanstack/react-query";
 import { v4 as uuidv4 } from "uuid";
 
 import { useChannelStore } from "@/libs/stores/channel";
@@ -77,7 +78,7 @@ export function useChannelMessage() {
   }, [channels, setMessagesByChannelId, supabase]);
 }
 
-export function useMessage() {
+export function useCreateMessage() {
   const { userId } = useAuth();
   const supabase = useSupabase();
   const { activeChannel } = useChannelStore(
@@ -115,7 +116,8 @@ export function useMessage() {
     }
   });
 
-  return {
-    sendMessage,
-  };
+  return useMutation({
+    mutationKey: ["sendMessage"],
+    mutationFn: sendMessage,
+  });
 }
