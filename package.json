@@ -8,9 +8,9 @@
     "start": "next start",
     "lint": "next lint"
   },
-  "packageManager": "pnpm@8.6.12",
+  "packageManager": "pnpm@8.10.2",
   "dependencies": {
-    "@clerk/nextjs": "^4.26.2",
+    "@clerk/nextjs": "^4.27.1",
     "@mantine/core": "7.2.1",
     "@mantine/hooks": "7.2.1",
     "@supabase/supabase-js": "^2.38.4",

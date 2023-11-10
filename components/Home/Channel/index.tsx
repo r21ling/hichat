@@ -20,7 +20,7 @@ import { useChannelStore, type Channel } from "@/libs/stores/channel";
 import ChannelItem from "./ChannelItem";
 import {
   useListenChannel,
-  useGetChannel,
+  useStoreChannel,
   useCreateChannel,
   useDeleteChannel,
 } from "./hooks";
@@ -45,7 +45,7 @@ const Channel = () => {
   >();
 
   useListenChannel();
-  const { refetch } = useGetChannel();
+  const { refetch } = useStoreChannel();
   const { mutateAsync: createChannel } = useCreateChannel();
   const { mutateAsync: deleteChannel } = useDeleteChannel();
 

@@ -51,18 +51,16 @@ export function useSupabase() {
     const supabase = await supabaseClient(supabaseAccessToken as string);
     setSupabase(supabase);
 
-    supabase
-      .from("users")
-      .upsert({
-        user_id: user?.id,
-        name: user?.username ?? user?.fullName,
-        first_name: user?.firstName,
-        last_name: user?.lastName,
-        image_url: user?.imageUrl,
-        email: user?.primaryEmailAddress?.emailAddress,
-        update_at: new Date(),
-      })
-      .then(() => console.log("user", user));
+    await supabase.from("users").upsert({
+      user_id: user?.id,
+      name: user?.username ?? user?.fullName,
+      first_name: user?.firstName,
+      last_name: user?.lastName,
+      image_url: user?.imageUrl,
+      email: user?.primaryEmailAddress?.emailAddress,
+      update_at: new Date(),
+    });
+    return supabase;
   });
 
   useQuery({
