@@ -100,45 +100,36 @@ const Channel = () => {
             }}
           />
         ))}
-        {(channels?.length ?? 0) < 5 && (
-          <>
-            {editing ? (
-              <Input
-                autoFocus
-                error={!valid}
-                placeholder="Channel Name"
-                rightSectionPointerEvents="all"
-                rightSection={
-                  <ActionIcon
-                    disabled={!valid}
-                    variant="light"
-                    aria-label="Send"
-                  >
-                    <IconSend size={20} onClick={() => handleCreateChannel()} />
-                  </ActionIcon>
+        {(channels?.length ?? 0) < 5 &&
+          (editing ? (
+            <Input
+              autoFocus
+              error={!valid}
+              placeholder="Channel Name"
+              rightSectionPointerEvents="all"
+              rightSection={
+                <ActionIcon disabled={!valid} variant="light" aria-label="Send">
+                  <IconSend size={20} onClick={() => handleCreateChannel()} />
+                </ActionIcon>
+              }
+              value={newChannelName}
+              onChange={(event) => setNewChannelName(event.currentTarget.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  handleCreateChannel();
                 }
-                value={newChannelName}
-                onChange={(event) =>
-                  setNewChannelName(event.currentTarget.value)
-                }
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    handleCreateChannel();
-                  }
-                }}
-              />
-            ) : (
-              <Button
-                fullWidth
-                variant="outline"
-                leftSection={<IconPlus size={20} />}
-                onClick={() => setEditing(true)}
-              >
-                Create Channel
-              </Button>
-            )}
-          </>
-        )}
+              }}
+            />
+          ) : (
+            <Button
+              fullWidth
+              variant="outline"
+              leftSection={<IconPlus size={20} />}
+              onClick={() => setEditing(true)}
+            >
+              Create Channel
+            </Button>
+          ))}
       </Stack>
 
       <Modal centered opened={opened} onClose={close}>

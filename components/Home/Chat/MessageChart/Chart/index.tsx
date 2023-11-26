@@ -67,7 +67,7 @@ const ChartControl = ({
         bottom: 40,
         left: 40,
         right: 20,
-        ...(margin ?? {}),
+        ...margin,
       }}
     >
       <AnimatedAxis
@@ -97,56 +97,47 @@ const ChartControl = ({
       />
 
       <AnimatedBarGroup>
-        {seriesType === "bar" && (
-          <>
-            {data?.map?.((d) => {
-              const key = Object.keys(d)[0];
-              return (
-                <AnimatedBarSeries
-                  key={key}
-                  dataKey={key}
-                  data={d[key] ?? []}
-                  xAccessor={getX}
-                  yAccessor={getY}
-                />
-              );
-            })}
-          </>
-        )}
+        {seriesType === "bar" &&
+          data?.map?.((d) => {
+            const key = Object.keys(d)[0];
+            return (
+              <AnimatedBarSeries
+                key={key}
+                dataKey={key}
+                data={d[key] ?? []}
+                xAccessor={getX}
+                yAccessor={getY}
+              />
+            );
+          })}
       </AnimatedBarGroup>
-      {seriesType === "line" && (
-        <>
-          {data?.map?.((d) => {
-            const key = Object.keys(d)[0];
-            return (
-              <AnimatedLineSeries
-                key={key}
-                dataKey={key}
-                data={d[key] ?? []}
-                xAccessor={getX}
-                yAccessor={getY}
-              />
-            );
-          })}
-        </>
-      )}
-      {seriesType === "area" && (
-        <>
-          {data?.map?.((d) => {
-            const key = Object.keys(d)[0];
-            return (
-              <AnimatedAreaSeries
-                key={key}
-                dataKey={key}
-                data={d[key] ?? []}
-                fillOpacity={0.4}
-                xAccessor={getX}
-                yAccessor={getY}
-              />
-            );
-          })}
-        </>
-      )}
+      {seriesType === "line" &&
+        data?.map?.((d) => {
+          const key = Object.keys(d)[0];
+          return (
+            <AnimatedLineSeries
+              key={key}
+              dataKey={key}
+              data={d[key] ?? []}
+              xAccessor={getX}
+              yAccessor={getY}
+            />
+          );
+        })}
+      {seriesType === "area" &&
+        data?.map?.((d) => {
+          const key = Object.keys(d)[0];
+          return (
+            <AnimatedAreaSeries
+              key={key}
+              dataKey={key}
+              data={d[key] ?? []}
+              fillOpacity={0.4}
+              xAccessor={getX}
+              yAccessor={getY}
+            />
+          );
+        })}
 
       <Tooltip<IData>
         snapTooltipToDatumX

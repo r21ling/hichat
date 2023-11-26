@@ -55,36 +55,31 @@ export default function Footer() {
   });
 
   return (
-    <>
-      <SimpleGrid cols={3} spacing={0}>
-        <Tooltip label={isLoggedIn ? "Log Out" : "Log In"}>
-          <ButtonWithIcon
-            onClick={() => handleLogin()}
-            style={{ width: "100%" }}
-          >
-            {isLoggedIn ? <IconLogout size={24} /> : <IconLogin size={24} />}
-          </ButtonWithIcon>
-        </Tooltip>
-        <Tooltip
-          label={computedColorScheme === "light" ? "Dark Mode" : "Light Mode"}
+    <SimpleGrid cols={3} spacing={0}>
+      <Tooltip label={isLoggedIn ? "Log Out" : "Log In"}>
+        <ButtonWithIcon onClick={() => handleLogin()} style={{ width: "100%" }}>
+          {isLoggedIn ? <IconLogout size={24} /> : <IconLogin size={24} />}
+        </ButtonWithIcon>
+      </Tooltip>
+      <Tooltip
+        label={computedColorScheme === "light" ? "Dark Mode" : "Light Mode"}
+      >
+        <ButtonWithIcon
+          onClick={() => toggleColorScheme()}
+          style={{ width: "100%" }}
         >
-          <ButtonWithIcon
-            onClick={() => toggleColorScheme()}
-            style={{ width: "100%" }}
-          >
-            {computedColorScheme === "light" ? (
-              <IconSun size={24} />
-            ) : (
-              <IconMoon size={24} />
-            )}
-          </ButtonWithIcon>
-        </Tooltip>
-        <Tooltip label="Settings">
-          <ButtonWithIcon aria-label="Settings" style={{ width: "100%" }}>
-            <IconSettings size={24} />
-          </ButtonWithIcon>
-        </Tooltip>
-      </SimpleGrid>
-    </>
+          {computedColorScheme === "light" ? (
+            <IconSun size={24} />
+          ) : (
+            <IconMoon size={24} />
+          )}
+        </ButtonWithIcon>
+      </Tooltip>
+      <Tooltip label="Settings">
+        <ButtonWithIcon aria-label="Settings" style={{ width: "100%" }}>
+          <IconSettings size={24} />
+        </ButtonWithIcon>
+      </Tooltip>
+    </SimpleGrid>
   );
 }

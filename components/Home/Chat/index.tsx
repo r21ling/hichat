@@ -27,13 +27,9 @@ const Chat = () => {
     return activeChannel?.id ? channelMessageMap.get(activeChannel?.id) : [];
   }, [activeChannel?.id, channelMessageMap]);
 
-  return (
-    <>
-      {messages?.map?.((message) => (
-        <Message key={message.id} {...message} />
-      ))}
-    </>
-  );
+  return messages?.map?.((message) => (
+    <Message key={message.id} {...message} />
+  ));
 };
 
 export default Chat;
